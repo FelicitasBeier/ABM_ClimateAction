@@ -1,73 +1,115 @@
-turtles-own [energy]
+;; Attributes of agents:
+;; status: activist, denier, neutral
+;; energy: level of activism of agent
+;; conv_chance: conversion chance (probability that agent switches other agent to its own state)
+turtles-own [status energy conv_chance]
 
-to start
-  move-turtles
-end
-
+;; Define agents
 to setup
   clear-all
-  create-turtles initial-number-of-cows
+  create-turtles initial-number-of-agents
+
   ask turtles [
     setxy random-xcor random-ycor
     set shape "person"
+    set status one-of ["activist" "neutral" "denier"]
+    if status = "activist" [
+      set color blue
+      set energy 70
+      set conv_chance 0.5
+    ]
+    if status = "neutral" [
+      set color white
+      set energy 50
+      set conv_chance 0
+    ]
+    if status = "denier" [
+      set color red
+      set energy 10
+      set conv_chance 0.8
+    ]
   ]
+
   setup-patches
   reset-ticks
 end
 
-to setup-patches
-  ask patches [
-    set pcolor green
-  ]
-end
 
-to go
-  move-turtles
-  check-death
-  regrow-grass
-  reproduce
-  tick
-  if ticks >= 300 [ stop ]
-end
 
-to reproduce
-  ask turtles [
-    if energy > 50 [
-      set energy energy - 50
-      hatch 1 [ set energy 30 ]
-    ]
-  ]
-end
 
-to regrow-grass
-  ask patches [
-    if random 100 < 3 [
-      set pcolor green
-    ]
-  ]
-end
+;; Define attributes
 
-to check-death
-  ask turtles [
-    if energy <= 0 [die]
-  ]
-end
+
+;; Set up field
+
+
+;; Set up
+
+
 
 to move-turtles
   ask turtles [
     right random 360
     fd 1
-    eat-grass
-    set energy energy - 1
+    encounter
+  ]
+  check-status
+end
+
+to encounter
+  ask other turtles-here with [ status = "activist" ] [
+    set color pink
+
+    if random-float 1 < conv_chance [
+    ]
+
+    set energy energy + 10
+  ]
+
+  ask other turtles-here with [ status = "denier" ] [
+    set color green
+    set energy energy - 10
   ]
 end
 
-to eat-grass
-  if pcolor = green [
-    set pcolor brown
-    set energy energy + energy-from-grass
+to check-status
+  ask turtles [
+    if energy > 70 [
+      set status "activist"
+    ]
+    if (energy < 70) AND (energy > 30) [
+      set status "neutral"
+    ]
+    if energy < 30 [
+      set status "denier"
+    ]
   ]
 end
+
+
+
+
+to start
+  move-turtles
+end
+
+
+
+to setup-patches
+  ask patches [
+    set pcolor black
+
+  ]
+end
+
+to go
+  move-turtles
+  tick
+  if ticks >= 300 [ stop ]
+end
+
+
+
 @#$#@#$#@
 GRAPHICS-WINDOW
 389
@@ -133,9 +175,9 @@ NIL
 MONITOR
 87
 63
-191
+200
 108
-Number of Cows
+Number of Agents
 count turtles
 17
 1
@@ -157,11 +199,11 @@ SLIDER
 117
 309
 150
-initial-number-of-cows
-initial-number-of-cows
+initial-number-of-agents
+initial-number-of-agents
 0
 100
-30.0
+41.0
 1
 1
 NIL
@@ -198,8 +240,10 @@ true
 false
 "" ""
 PENS
-"Cows" 1.0 0 -16777216 true "" "plot count turtles"
-"grass" 1.0 0 -15040220 true "" "plot count patches with [ pcolor = green ]"
+"Totals" 1.0 0 -16710398 true "" "plot count turtles"
+"Activists" 1.0 0 -13791810 true "" "plot count turtles with [status = \"activist\" ]"
+"Deniers" 1.0 0 -8053223 true "" "plot count turtles with [ status = \"denier\" ]"
+"Energy" 1.0 0 -955883 true "" "plot mean [energy] of turtles"
 
 BUTTON
 43
