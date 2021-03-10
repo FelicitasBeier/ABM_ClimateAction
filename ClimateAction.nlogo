@@ -2,7 +2,8 @@
 ;; status: activist, denier, neutral
 ;; energy: level of activism of agent
 ;; conv_chance: conversion chance (probability that agent switches other agent to its own state)
-turtles-own [status energy conv_chance]
+turtles-own [status energy]
+globals [emis_tick_cumulative emis_tick emis_tick_negative per_person_emis]
 
 ;; Define agents
 to setup
@@ -16,19 +17,20 @@ to setup
     if status = "activist" [
       set color blue
       set energy 70
-      set conv_chance 0.5
     ]
     if status = "neutral" [
       set color white
       set energy 50
-      set conv_chance 0
     ]
     if status = "denier" [
       set color red
       set energy 10
-      set conv_chance 0.8
     ]
   ]
+
+  set emis_tick_cumulative 410
+  set emis_tick_negative -1
+  set per_person_emis 0.01
 
   setup-patches
   reset-ticks
@@ -53,40 +55,35 @@ to move-turtles
     fd 1
     encounter
   ]
-  check-status
+;  check-status
 end
 
 to encounter
-  ask other turtles-here with [ status = "activist" ] [
-    set color pink
-
-    if random-float 1 < conv_chance [
+  if status = "activist" [
+    ask other turtles-here [
+      if random-float 1 < Activitst-Convincing-Power [
+        set energy energy + 10
+         if energy > 70 [
+           set status "activist"
+          set color blue
+        ]
+      ]
     ]
+ ]
 
-    set energy energy + 10
-  ]
+  if status = "denier" [
+   ask other turtles-here [
+     if random-float 1 < Denier-Convincing-Power [
+       set energy energy - 10
+        if energy < 30 [
+          set status "denier"
+          set color red
+       ]
+     ]
+   ]
+ ]
 
-  ask other turtles-here with [ status = "denier" ] [
-    set color green
-    set energy energy - 10
-  ]
 end
-
-to check-status
-  ask turtles [
-    if energy > 70 [
-      set status "activist"
-    ]
-    if (energy < 70) AND (energy > 30) [
-      set status "neutral"
-    ]
-    if energy < 30 [
-      set status "denier"
-    ]
-  ]
-end
-
-
 
 
 to start
@@ -98,27 +95,30 @@ end
 to setup-patches
   ask patches [
     set pcolor black
-
   ]
 end
 
 to go
   move-turtles
+  set emis_tick per_person_emis * count turtles with [status != "activist"]
   tick
-  if ticks >= 300 [ stop ]
+  set emis_tick_cumulative emis_tick_cumulative + emis_tick
+  if (count turtles with [status = "activist"] / count turtles) > 0.6 AND emis_tick_cumulative > 0 [
+   set emis_tick_cumulative emis_tick_cumulative + emis_tick_negative
+  ]
+  if emis_tick_cumulative >= 1200 [ stop ]
 end
-
 
 
 @#$#@#$#@
 GRAPHICS-WINDOW
-389
-10
-884
-506
+635
+16
+1184
+566
 -1
 -1
-14.76
+16.4
 1
 10
 1
@@ -139,9 +139,9 @@ ticks
 30.0
 
 BUTTON
-94
+9
 10
-161
+76
 43
 setup
 setup
@@ -156,9 +156,9 @@ NIL
 1
 
 BUTTON
-233
+91
 10
-296
+154
 43
 go
 go
@@ -173,10 +173,10 @@ NIL
 1
 
 MONITOR
-87
-63
-200
-108
+0
+172
+137
+217
 Number of Agents
 count turtles
 17
@@ -184,72 +184,36 @@ count turtles
 11
 
 MONITOR
-234
-60
-339
-105
-Amount of Grass
-count patches with [ pcolor = green ]
+168
+169
+273
+214
+Activists
+count turtles with [ status = \"activist\" ]
 17
 1
 11
 
 SLIDER
-107
-117
-309
-150
+353
+10
+555
+43
 initial-number-of-agents
 initial-number-of-agents
 0
-100
-41.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-109
-152
-309
-185
-energy-from-grass
-energy-from-grass
-0
-100
-10.0
-1
+1000
+230.0
+10
 1
 NIL
 HORIZONTAL
-
-PLOT
-84
-245
-346
-454
-Totals
-time
-totals
-0.0
-10.0
-0.0
-10.0
-true
-false
-"" ""
-PENS
-"Totals" 1.0 0 -16710398 true "" "plot count turtles"
-"Activists" 1.0 0 -13791810 true "" "plot count turtles with [status = \"activist\" ]"
-"Deniers" 1.0 0 -8053223 true "" "plot count turtles with [ status = \"denier\" ]"
-"Energy" 1.0 0 -955883 true "" "plot mean [energy] of turtles"
 
 BUTTON
+163
+10
+226
 43
-194
-106
-227
 NIL
 start
 NIL
@@ -261,6 +225,115 @@ NIL
 NIL
 NIL
 1
+
+MONITOR
+300
+170
+357
+215
+Deniers
+count turtles with [ status = \"denier\" ]
+17
+1
+11
+
+MONITOR
+374
+172
+433
+217
+Neutrals
+count turtles with [ status = \"neutral\" ]
+17
+1
+11
+
+SLIDER
+357
+60
+555
+93
+Activitst-Convincing-Power
+Activitst-Convincing-Power
+0
+1
+0.4
+0.05
+1
+NIL
+HORIZONTAL
+
+SLIDER
+357
+122
+555
+155
+Denier-Convincing-Power
+Denier-Convincing-Power
+0
+1
+0.6
+0.05
+1
+NIL
+HORIZONTAL
+
+PLOT
+346
+247
+546
+397
+Cumulative Emissions
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+true
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "plot emis_tick_cumulative"
+
+PLOT
+343
+416
+543
+566
+Emis Tick
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "plot emis_tick"
+
+PLOT
+0
+248
+262
+457
+Totals
+time
+totals
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"Neutrals" 1.0 0 -16710398 true "" "plot count turtles with [status = \"neutral\" ]"
+"Activists" 1.0 0 -13791810 true "" "plot count turtles with [status = \"activist\" ]"
+"Deniers" 1.0 0 -8053223 true "" "plot count turtles with [ status = \"denier\" ]"
+"Energy" 1.0 0 -955883 true "" "plot mean [energy] of turtles"
 
 @#$#@#$#@
 ## WHAT IS IT?
