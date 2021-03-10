@@ -62,7 +62,7 @@ to encounter
   if status = "activist" [
     ask other turtles-here [
       if random-float 1 < Activitst-Convincing-Power [
-        set energy energy + 10
+        set energy energy + energy_inc
          if energy > 70 [
            set status "activist"
           set color blue
@@ -74,7 +74,7 @@ to encounter
   if status = "denier" [
    ask other turtles-here [
      if random-float 1 < Denier-Convincing-Power [
-       set energy energy - 10
+       set energy energy - energy_dec
         if energy < 30 [
           set status "denier"
           set color red
@@ -257,7 +257,7 @@ Activitst-Convincing-Power
 Activitst-Convincing-Power
 0
 1
-0.4
+0.55
 0.05
 1
 NIL
@@ -272,7 +272,7 @@ Denier-Convincing-Power
 Denier-Convincing-Power
 0
 1
-0.6
+0.5
 0.05
 1
 NIL
@@ -334,6 +334,36 @@ PENS
 "Activists" 1.0 0 -13791810 true "" "plot count turtles with [status = \"activist\" ]"
 "Deniers" 1.0 0 -8053223 true "" "plot count turtles with [ status = \"denier\" ]"
 "Energy" 1.0 0 -955883 true "" "plot mean [energy] of turtles"
+
+SLIDER
+16
+66
+188
+99
+energy_inc
+energy_inc
+0
+20
+10.0
+2
+1
+NIL
+HORIZONTAL
+
+SLIDER
+19
+117
+191
+150
+energy_dec
+energy_dec
+0
+20
+10.0
+2
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
