@@ -265,10 +265,10 @@ count population with [ status = \"neutral\" ]
 11
 
 SLIDER
-1254
-18
-1452
-51
+3
+100
+201
+133
 Activitst-Convincing-Power
 Activitst-Convincing-Power
 0
@@ -280,15 +280,15 @@ NIL
 HORIZONTAL
 
 SLIDER
-1255
-58
-1453
-91
+4
+140
+202
+173
 Denier-Convincing-Power
 Denier-Convincing-Power
 0
 1
-0.45
+0.5
 0.05
 1
 NIL
@@ -307,7 +307,7 @@ NIL
 0.0
 10.0
 true
-true
+false
 "" ""
 PENS
 "default" 1.0 0 -16777216 true "" "plot emis_tick_cumulative"
@@ -352,10 +352,10 @@ PENS
 "Energy" 1.0 0 -955883 true "" "plot mean [energy] of population"
 
 SLIDER
-1257
-109
-1429
-142
+6
+191
+178
+224
 energy_inc
 energy_inc
 0
@@ -367,10 +367,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-1258
-146
-1430
+7
+228
 179
+261
 energy_dec
 energy_dec
 0
