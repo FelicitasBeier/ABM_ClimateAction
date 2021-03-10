@@ -2,15 +2,20 @@
 ;; status: activist, denier, neutral
 ;; energy: level of activism of agent
 ;; conv_chance: conversion chance (probability that agent switches other agent to its own state)
-turtles-own [status energy]
+population-own [status energy]
+VIPs-own [VIPstatus]
 globals [emis_tick_cumulative emis_tick emis_tick_negative per_person_emis]
+
+breed [VIPs influencer]
+breed [population people]
 
 ;; Define agents
 to setup
   clear-all
-  create-turtles initial-number-of-agents
+  create-population initial-number-of-agents
+  create-VIPs initial-number-of-influencers
 
-  ask turtles [
+  ask population [
     setxy random-xcor random-ycor
     set shape "person"
     set status one-of ["activist" "neutral" "denier"]
@@ -28,6 +33,12 @@ to setup
     ]
   ]
 
+  ask VIPs [
+    setxy random-xcor random-ycor
+    set shape "car"
+    set color yellow
+  ]
+
   set emis_tick_cumulative 410
   set emis_tick_negative -1
   set per_person_emis 0.01
@@ -36,31 +47,32 @@ to setup
   reset-ticks
 end
 
-
-
-
-;; Define attributes
-
-
-;; Set up field
-
-
-;; Set up
-
-
-
-to move-turtles
-  ask turtles [
+to move-population
+  ask population [
     right random 360
     fd 1
     encounter
   ]
-;  check-status
+end
+
+to move-VIPs
+  ask VIPs [
+    left random 360
+    fd 5
+    VIPradius
+  ]
+end
+
+to VIPradius
+    ask population in-radius 1 [
+    set energy energy + energy_inc
+ ]
 end
 
 to encounter
+
   if status = "activist" [
-    ask other turtles-here [
+    ask other population-here [
       if random-float 1 < Activitst-Convincing-Power [
         set energy energy + energy_inc
          if energy > 70 [
@@ -72,7 +84,7 @@ to encounter
  ]
 
   if status = "denier" [
-   ask other turtles-here [
+   ask other population-here [
      if random-float 1 < Denier-Convincing-Power [
        set energy energy - energy_dec
         if energy < 30 [
@@ -87,8 +99,10 @@ end
 
 
 to start
-  move-turtles
+  move-population
 end
+
+
 
 
 
@@ -99,16 +113,16 @@ to setup-patches
 end
 
 to go
-  move-turtles
-  set emis_tick per_person_emis * count turtles with [status != "activist"]
+  move-population
+  move-VIPs
+  set emis_tick per_person_emis * count population with [status != "activist"]
   tick
   set emis_tick_cumulative emis_tick_cumulative + emis_tick
-  if (count turtles with [status = "activist"] / count turtles) > 0.6 AND emis_tick_cumulative > 0 [
+  if (count population with [status = "activist"] / count population) > 0.6 AND emis_tick_cumulative > 0 [
    set emis_tick_cumulative emis_tick_cumulative + emis_tick_negative
   ]
   if emis_tick_cumulative >= 1200 [ stop ]
 end
-
 
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -189,7 +203,7 @@ MONITOR
 273
 214
 Activists
-count turtles with [ status = \"activist\" ]
+count population with [ status = \"activist\" ]
 17
 1
 11
@@ -232,7 +246,7 @@ MONITOR
 357
 215
 Deniers
-count turtles with [ status = \"denier\" ]
+count population with [ status = \"denier\" ]
 17
 1
 11
@@ -243,7 +257,7 @@ MONITOR
 433
 217
 Neutrals
-count turtles with [ status = \"neutral\" ]
+count population with [ status = \"neutral\" ]
 17
 1
 11
@@ -330,10 +344,10 @@ true
 false
 "" ""
 PENS
-"Neutrals" 1.0 0 -16710398 true "" "plot count turtles with [status = \"neutral\" ]"
-"Activists" 1.0 0 -13791810 true "" "plot count turtles with [status = \"activist\" ]"
-"Deniers" 1.0 0 -8053223 true "" "plot count turtles with [ status = \"denier\" ]"
-"Energy" 1.0 0 -955883 true "" "plot mean [energy] of turtles"
+"Neutrals" 1.0 0 -16710398 true "" "plot count population with [status = \"neutral\" ]"
+"Activists" 1.0 0 -13791810 true "" "plot count population with [status = \"activist\" ]"
+"Deniers" 1.0 0 -8053223 true "" "plot count population with [ status = \"denier\" ]"
+"Energy" 1.0 0 -955883 true "" "plot mean [energy] of population"
 
 SLIDER
 16
@@ -364,6 +378,21 @@ energy_dec
 1
 NIL
 HORIZONTAL
+
+SLIDER
+584
+19
+621
+185
+initial-number-of-influencers
+initial-number-of-influencers
+0
+5
+1.0
+1
+1
+NIL
+VERTICAL
 
 @#$#@#$#@
 ## WHAT IS IT?
