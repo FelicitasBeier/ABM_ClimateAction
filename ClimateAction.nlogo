@@ -41,7 +41,7 @@ to setup
 
   set emis_tick_cumulative 410
   set emis_tick_negative -1
-  set per_person_emis 0.01
+  set per_person_emis 0.02
 
   setup-patches
   reset-ticks
@@ -97,15 +97,6 @@ to encounter
 
 end
 
-
-to start
-  move-population
-end
-
-
-
-
-
 to setup-patches
   ask patches [
     set pcolor black
@@ -124,12 +115,23 @@ to go
   if emis_tick_cumulative >= 1200 [ stop ]
 end
 
+to start
+  move-population
+  move-VIPs
+  set emis_tick per_person_emis * count population with [status != "activist"]
+  tick
+  set emis_tick_cumulative emis_tick_cumulative + emis_tick
+  if (count population with [status = "activist"] / count population) > 0.6 AND emis_tick_cumulative > 0 [
+   set emis_tick_cumulative emis_tick_cumulative + emis_tick_negative
+  ]
+  if emis_tick_cumulative >= 1200 [ stop ]
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
-635
+631
 16
-1184
-566
+1245
+336
 -1
 -1
 16.4
@@ -142,10 +144,10 @@ GRAPHICS-WINDOW
 1
 1
 1
--16
-16
--16
-16
+-18
+18
+-9
+9
 1
 1
 1
@@ -170,10 +172,10 @@ NIL
 1
 
 BUTTON
-91
-10
-154
-43
+11
+50
+74
+83
 go
 go
 T
@@ -187,10 +189,10 @@ NIL
 1
 
 MONITOR
-0
-172
-137
-217
+488
+18
+625
+63
 Number of Agents
 count turtles
 17
@@ -198,10 +200,10 @@ count turtles
 11
 
 MONITOR
-168
-169
-273
-214
+488
+68
+593
+113
 Activists
 count population with [ status = \"activist\" ]
 17
@@ -209,25 +211,25 @@ count population with [ status = \"activist\" ]
 11
 
 SLIDER
-353
-10
-555
-43
+632
+339
+834
+372
 initial-number-of-agents
 initial-number-of-agents
-0
+100
 1000
-230.0
-10
+750.0
+50
 1
 NIL
 HORIZONTAL
 
 BUTTON
-163
-10
-226
-43
+82
+51
+145
+84
 NIL
 start
 NIL
@@ -241,10 +243,10 @@ NIL
 1
 
 MONITOR
-300
-170
-357
-215
+489
+163
+546
+208
 Deniers
 count population with [ status = \"denier\" ]
 17
@@ -252,10 +254,10 @@ count population with [ status = \"denier\" ]
 11
 
 MONITOR
-374
-172
-433
-217
+489
+115
+548
+160
 Neutrals
 count population with [ status = \"neutral\" ]
 17
@@ -263,27 +265,12 @@ count population with [ status = \"neutral\" ]
 11
 
 SLIDER
-357
-60
-555
-93
+1254
+18
+1452
+51
 Activitst-Convincing-Power
 Activitst-Convincing-Power
-0
-1
-0.55
-0.05
-1
-NIL
-HORIZONTAL
-
-SLIDER
-357
-122
-555
-155
-Denier-Convincing-Power
-Denier-Convincing-Power
 0
 1
 0.5
@@ -292,11 +279,26 @@ Denier-Convincing-Power
 NIL
 HORIZONTAL
 
+SLIDER
+1255
+58
+1453
+91
+Denier-Convincing-Power
+Denier-Convincing-Power
+0
+1
+0.45
+0.05
+1
+NIL
+HORIZONTAL
+
 PLOT
-346
-247
-546
-397
+216
+234
+416
+384
 Cumulative Emissions
 NIL
 NIL
@@ -311,10 +313,10 @@ PENS
 "default" 1.0 0 -16777216 true "" "plot emis_tick_cumulative"
 
 PLOT
-343
-416
-543
-566
+421
+233
+621
+383
 Emis Tick
 NIL
 NIL
@@ -329,10 +331,10 @@ PENS
 "default" 1.0 0 -16777216 true "" "plot emis_tick"
 
 PLOT
-0
-248
-262
-457
+215
+18
+477
+227
 Totals
 time
 totals
@@ -350,10 +352,10 @@ PENS
 "Energy" 1.0 0 -955883 true "" "plot mean [energy] of population"
 
 SLIDER
-16
-66
-188
-99
+1257
+109
+1429
+142
 energy_inc
 energy_inc
 0
@@ -365,10 +367,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-19
-117
-191
-150
+1258
+146
+1430
+179
 energy_dec
 energy_dec
 0
@@ -380,19 +382,19 @@ NIL
 HORIZONTAL
 
 SLIDER
-584
-19
-621
-185
+836
+338
+1026
+371
 initial-number-of-influencers
 initial-number-of-influencers
 0
 5
-1.0
+2.0
 1
 1
 NIL
-VERTICAL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
