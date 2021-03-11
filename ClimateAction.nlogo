@@ -1,13 +1,18 @@
-;; Attributes of agents:
-;; status: activist, denier, neutral
-;; energy: level of activism of agent
-;; conv_chance: conversion chance (probability that agent switches other agent to its own state)
-population-own [status energy]
-VIPs-own [VIPstatus]
+;; Global parameters/variables
+;; emis_tick_cumulative: total emissions in the atmosphere
+;; emis_tick
+;; emis_tick_negative
+;; per_person_emis: emissions per capita per time step
 globals [emis_tick_cumulative emis_tick emis_tick_negative per_person_emis]
 
+;; Two types of agents (breeds)
 breed [VIPs influencer]
 breed [population people]
+
+;; Attributes of population agents:
+;; status: activist, denier, neutral
+;; energy: level of activism of agent
+population-own [status energy]
 
 ;; Define agents
 to setup
@@ -55,6 +60,7 @@ to move-population
   ]
 end
 
+;; Influencers move faster than population
 to move-VIPs
   ask VIPs [
     left random 360
@@ -63,8 +69,9 @@ to move-VIPs
   ]
 end
 
+;; Influencers add energy to people in their surrounding (prevent switching to deniers)
 to VIPradius
-    ask population in-radius 1 [
+    ask population in-radius 3 [
     set energy energy + energy_inc
  ]
 end
@@ -390,7 +397,7 @@ initial-number-of-influencers
 initial-number-of-influencers
 0
 5
-2.0
+1.0
 1
 1
 NIL
