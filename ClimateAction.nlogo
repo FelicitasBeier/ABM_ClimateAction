@@ -20,6 +20,13 @@ to setup
   create-population initial-number-of-agents
   create-VIPs initial-number-of-influencers
 
+  ;; Emission-level starts at 410ppm (today's level of CO2 in atmosphere)
+  set emis_tick_cumulative 410
+  ;; Emission removal technologies remove emis_tick_negative per time period
+  set emis_tick_negative -0.5
+  ;; Normal population emit 0.02ppm per time period. Activist reduce their personal emissions (on average) to 0
+  set per_person_emis 0.02
+
   ask population [
     setxy random-xcor random-ycor
     set shape "person"
@@ -43,10 +50,6 @@ to setup
     set shape "car"
     set color yellow
   ]
-
-  set emis_tick_cumulative 410
-  set emis_tick_negative -1
-  set per_person_emis 0.02
 
   setup-patches
   reset-ticks
@@ -356,7 +359,6 @@ PENS
 "Neutrals" 1.0 0 -16710398 true "" "plot count population with [status = \"neutral\" ]"
 "Activists" 1.0 0 -13791810 true "" "plot count population with [status = \"activist\" ]"
 "Deniers" 1.0 0 -8053223 true "" "plot count population with [ status = \"denier\" ]"
-"Energy" 1.0 0 -955883 true "" "plot mean [energy] of population"
 
 SLIDER
 6
@@ -402,6 +404,24 @@ initial-number-of-influencers
 1
 NIL
 HORIZONTAL
+
+PLOT
+9
+281
+209
+431
+Mean activism-energy level of population
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -955883 true "" "plot mean [energy] of population"
 
 @#$#@#$#@
 ## WHAT IS IT?
