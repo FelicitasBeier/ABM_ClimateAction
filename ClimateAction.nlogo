@@ -51,7 +51,7 @@ to setup
 
     if status = "activist" [
       set color blue
-      set energy 70
+      set energy 90
     ]
     if status = "neutral" [
       set color white
@@ -316,7 +316,7 @@ Activitst-Convincing-Power
 Activitst-Convincing-Power
 0
 1
-0.81
+0.5
 0.01
 1
 NIL
@@ -459,40 +459,72 @@ PENS
 @#$#@#$#@
 ## WHAT IS IT?
 
-The Climate Action ABM is a simple agent-based model modelling the role of
+The Climate Action ABM is a simple agent-based model. It models the role of
 climate activists, climate deniers and the power of influencers in a society.
 
 CO2 emissions per capita depend on the agents state of mind (activists emit less
 compared to the general population or climate deniers).
 If a certain share of the population is climate-aware (activist state),
-carbon removal technologies are used.
+carbon removal technologies are used. This is a social tipping point. 
 
 The global level of CO2 in the atmosphere starts at 410ppm. At a state of
 1200ppm Earth System tipping points are reached and humanity ends.
 
+
 ## HOW IT WORKS
 
-(what rules the agents use to create the overall behavior of the model)
+There are two types of agents (people and influencers). 
+People move around randomly.
+Influencer (VIPs), represented by the car symbol, also move randomly, but faster. They move several steps in one time step, while people, represented by the person symbol, move only 1 step. 
+
+The population (people) are divided into activists (blue), neutral (white) and deniers (red). Each agent is endowed with a certain level of activism energy. If activism energy is greater than 70, the person is declared activist, if it is below 30, the person is declared denier. All other are neutral individuals. 
+Initially, 20% of the population are deniers, 20% activists and 60% neutral individuals. 
+
+When an activists meets another person, the other person's activism energy increases. When a denier meets another person, the other person's activism energy decreases. 
+
+Influencer increase the energy of people in their surrounding (3-pixel radius) by the same amount as activists and therefore support activists and hinder spreading of consipiracy theories and climate scepticism. 
+
+Every agent (except for activists) emits 0.02ppm CO2 per time step. Activists don't emit CO2.
+When carbon removal technology comes into place (above social tipping point: support of 60% of population), 0.5ppm CO2 are removed from the atmosphere per time step.  
 
 ## HOW TO USE IT
 
-(how to use the model, including a description of each of the items in the Interface tab)
+The setup button sets up the world (initialization of game according to selected settings).
+The go button starts the simulation run.
+The start button lets agents make one step.
+
+The user can set 
+(a) the initial number of agents in a range between 1 billion represented by 100 turtles (population at around 1900) and 10 billion represented by 1000 turtles (potential population by the end of the century).  
+(b) the initial number of influencers in a range between 0 and 5.
+(c) the activits (deniers) convincing power, i.e. the probability that the activits (denier) convinces the person they met (between 0 and 1)
+(d) the activits (deniers) level of activism they add (subtract) from the person they meet energy_inc (energy_dec)
 
 ## THINGS TO NOTICE
 
-(suggested things for the user to notice while running the model)
+In the standard setting (7.5 billion people (750), 10 mio. influencers (1), same convincing power for activists and deniers), it is possible to hit the Earth System Tipping Point before the Social Tipping Point allowing decarbonization (carbon removal) is reached. However, there is also a chance that humanity survives. 
+
+There are strategies to decrease the likelihood of human extinction (population size, number of influencers, power of activists)
+
 
 ## THINGS TO TRY
 
-(suggested things for the user to try to do (move sliders, switches, etc.) with the model)
+- Increase the population: How much faster is the Earth System Tipping Point reached with higher population size? (Analyze risk of over-population)
+- Increase the activists convinving power or energy_inc relative to the power of the deniers. (Analyze the effect of Science Communication)
+- Play with the number of influencers. (Role of social media)
+
 
 ## EXTENDING THE MODEL
 
-(suggested things to add or change in the Code tab to make the model more complicated, detailed, accurate, etc.)
+Potential extensions include:
+- population expansion scenarios (e.g. increase of population over time)
+- make all model parameters flexible (social-tipping-point, earth-system-tipping-point, initial co2 in atmosphere, emissions per capita)
+- include social networks and clusters (deniers have higher likelihood to meet deniers, activits higher likelihood to interact with activits)
+- include extreme events
+- include technological break-throughs
 
 ## NETLOGO FEATURES
 
-(interesting or unusual features of NetLogo that the model uses, particularly in the Code tab; or where workarounds were needed for missing features)
+- Netlogo interface, buttons and output graphs
 
 ## RELATED MODELS
 
@@ -501,6 +533,7 @@ The global level of CO2 in the atmosphere starts at 410ppm. At a state of
 ## CREDITS AND REFERENCES
 
 Developed by Abhijeet Mishra and Felicitas Beier
+
 @#$#@#$#@
 default
 true
