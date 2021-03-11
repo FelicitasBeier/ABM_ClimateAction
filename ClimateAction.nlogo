@@ -22,15 +22,22 @@ to setup
 
   ;; Emission-level starts at 410ppm (today's level of CO2 in atmosphere)
   set emis_tick_cumulative 410
-  ;; Emission removal technologies remove emis_tick_negative per time period
-  set emis_tick_negative -0.5
   ;; Normal population emit 0.02ppm per time period. Activist reduce their personal emissions (on average) to 0
   set per_person_emis 0.02
+  ;; Emission removal technologies remove emis_tick_negative per time period
+  set emis_tick_negative -0.5
+
 
   ask population [
     setxy random-xcor random-ycor
     set shape "person"
-    set status one-of ["activist" "neutral" "denier"]
+    let random_prob random-float 1
+    (ifelse
+      random_prob <= 0.2 [ set status "denier" ]
+      random_prob > 0.2 AND random_prob < 0.8 [ set status "neutral" ]
+      random_prob >= 0.8 [ set status "activist" ]
+    )
+
     if status = "activist" [
       set color blue
       set energy 70
@@ -107,6 +114,25 @@ to encounter
 
 end
 
+to energy_check_post_vip
+  ask population[
+  if energy < 30 [
+      set status "denier"
+      set color red
+    ]
+  if energy >= 30 AND energy <= 70
+    [
+      set status "neutral"
+      set color white
+    ]
+  if energy > 70 [
+      set status "activist"
+      set color blue
+    ]
+  ]
+end
+
+
 to setup-patches
   ask patches [
     set pcolor black
@@ -116,6 +142,7 @@ end
 to go
   move-population
   move-VIPs
+  energy_check_post_vip
   set emis_tick per_person_emis * count population with [status != "activist"]
   tick
   set emis_tick_cumulative emis_tick_cumulative + emis_tick
@@ -128,6 +155,7 @@ end
 to start
   move-population
   move-VIPs
+  energy_check_post_vip
   set emis_tick per_person_emis * count population with [status != "activist"]
   tick
   set emis_tick_cumulative emis_tick_cumulative + emis_tick
@@ -284,7 +312,7 @@ Activitst-Convincing-Power
 0
 1
 0.5
-0.05
+0.01
 1
 NIL
 HORIZONTAL
@@ -298,8 +326,8 @@ Denier-Convincing-Power
 Denier-Convincing-Power
 0
 1
-0.5
-0.05
+0.31
+0.01
 1
 NIL
 HORIZONTAL
