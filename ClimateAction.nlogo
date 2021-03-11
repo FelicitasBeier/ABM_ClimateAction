@@ -3,7 +3,7 @@
 ;; emis_tick
 ;; emis_tick_negative
 ;; per_person_emis: emissions per capita per time step
-globals [emis_tick_cumulative emis_tick emis_tick_negative per_person_emis]
+globals [emis_tick_cumulative emis_tick emis_tick_negative per_person_emis social_tipping_point earth_system_tipping_point]
 
 ;; Two types of agents (breeds)
 breed [VIPs influencer]
@@ -13,6 +13,13 @@ breed [population people]
 ;; status: activist, denier, neutral
 ;; energy: level of activism of agent
 population-own [status energy]
+
+;; Set up the world
+to setup-patches
+  ask patches [
+    set pcolor black
+  ]
+end
 
 ;; Define agents
 to setup
@@ -26,6 +33,10 @@ to setup
   set per_person_emis 0.02
   ;; Emission removal technologies remove emis_tick_negative per time period
   set emis_tick_negative -0.5
+  ;;; With at least 60% of population being activists: negative emission technology takes effect
+  set social_tipping_point 0.6
+  ;;; At a level of 1200ppm of CO2 in the atmosphere, the Earth System reaches a tipping point and the game ends
+  set earth_system_tipping_point 1200
 
 
   ask population [
@@ -116,29 +127,22 @@ end
 
 to energy_check_post_vip
   ask population[
-  if energy < 30 [
+  if energy <= 30 [
       set status "denier"
       set color red
     ]
-  if energy >= 30 AND energy <= 70
-    [
+  if (energy > 30) AND (energy < 70) [
       set status "neutral"
       set color white
     ]
-  if energy > 70 [
+  if energy >= 70 [
       set status "activist"
       set color blue
     ]
   ]
 end
 
-
-to setup-patches
-  ask patches [
-    set pcolor black
-  ]
-end
-
+;;; Start the simulation
 to go
   move-population
   move-VIPs
@@ -152,6 +156,7 @@ to go
   if emis_tick_cumulative >= 1200 [ stop ]
 end
 
+;;; Go one time step
 to start
   move-population
   move-VIPs
@@ -159,10 +164,10 @@ to start
   set emis_tick per_person_emis * count population with [status != "activist"]
   tick
   set emis_tick_cumulative emis_tick_cumulative + emis_tick
-  if (count population with [status = "activist"] / count population) > 0.6 AND emis_tick_cumulative > 0 [
+  if (count population with [status = "activist"] / count population) > social_tipping_point AND emis_tick_cumulative > 0 [
    set emis_tick_cumulative emis_tick_cumulative + emis_tick_negative
   ]
-  if emis_tick_cumulative >= 1200 [ stop ]
+  if emis_tick_cumulative >= earth_system_tipping_point [ stop ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -311,7 +316,7 @@ Activitst-Convincing-Power
 Activitst-Convincing-Power
 0
 1
-0.5
+0.81
 0.01
 1
 NIL
@@ -326,7 +331,7 @@ Denier-Convincing-Power
 Denier-Convincing-Power
 0
 1
-0.31
+0.5
 0.01
 1
 NIL
