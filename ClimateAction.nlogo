@@ -528,12 +528,13 @@ Potential extensions include:
 
 ## RELATED MODELS
 
-(models in the NetLogo Models Library and elsewhere which are of related interest)
+Potentially similar models in the NetLogo Library are
+- Altruism
+- HIV
 
 ## CREDITS AND REFERENCES
 
 Developed by Abhijeet Mishra and Felicitas Beier
-
 @#$#@#$#@
 default
 true
