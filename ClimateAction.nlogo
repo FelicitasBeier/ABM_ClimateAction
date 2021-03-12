@@ -478,11 +478,17 @@ People move around randomly.
 Influencer (VIPs), represented by the car symbol, also move randomly, but faster. They move several steps in one time step, while people, represented by the person symbol, move only 1 step. 
 
 The population (people) are divided into activists (blue), neutral (white) and deniers (red). Each agent is endowed with a certain level of activism energy. If activism energy is greater than 70, the person is declared activist, if it is below 30, the person is declared denier. All other are neutral individuals. 
-Initially, 20% of the population are deniers, 20% activists and 60% neutral individuals. 
+Initially, 20% of the population are deniers, 20% activists and 60% neutral individuals.
+
+Here, the names are only representative and can be elaborated/generalized as follows:
+* "activist" are agents with considerable knowledge about climate change, are empathetic, care about the environment, convince others to make better choices to avoid envronmental degradation.
+* "neutral" are agents with or without considerable knowledge about climate change. These agents are indifferent towards impacts of climate change. In real world, such elements in population probably exist in large numbers. These agents don't convince others to think any differently but are persuaded by others.
+* "deniers" are agents who don't believe in climate change, are not empathetic, do not care about the environment, and engage in actively denouncing the existence of climate change.
+* "influencer" are agent(s) which are similar to "activist" but these agents have a higher reach or engagement with normal population. These agent(s) help in moving public consensus about climate change by virtue of talking publically about perils of climate change and the damages it can do for future generations. Influencer(s) also make sure that misinformation about climate change is not propagated in their vicinity or influence circle.
 
 When an activists meets another person, the other person's activism energy increases. When a denier meets another person, the other person's activism energy decreases. 
 
-Influencer increase the energy of people in their surrounding (3-pixel radius) by the same amount as activists and therefore support activists and hinder spreading of consipiracy theories and climate scepticism. 
+Influencer increase the energy of people in their surrounding (3-pixel radius) by the same amount as activists and therefore support activists and hinder spreading of misinformation, consipiracy theories and climate scepticism. 
 
 Every agent (except for activists) emits 0.02ppm CO2 per time step. Activists don't emit CO2.
 When carbon removal technology comes into place (above social tipping point: support of 60% of population), 0.5ppm CO2 are removed from the atmosphere per time step.  
@@ -534,7 +540,7 @@ Potentially similar models in the NetLogo Library are
 
 ## CREDITS AND REFERENCES
 
-Developed by Abhijeet Mishra and Felicitas Beier
+Developed by Felicitas Beier and Abhijeet Mishra
 @#$#@#$#@
 default
 true
