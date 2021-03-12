@@ -66,7 +66,7 @@ to setup
   ask VIPs [
     setxy random-xcor random-ycor
     set shape "car"
-    set color yellow
+    set color green
   ]
 
   setup-patches
