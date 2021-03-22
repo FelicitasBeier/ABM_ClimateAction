@@ -316,7 +316,7 @@ Activitst-Convincing-Power
 Activitst-Convincing-Power
 0
 1
-0.5
+1.0
 0.01
 1
 NIL
@@ -331,7 +331,7 @@ Denier-Convincing-Power
 Denier-Convincing-Power
 0
 1
-0.5
+1.0
 0.01
 1
 NIL
@@ -851,6 +851,32 @@ NetLogo 6.2.0
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
+<experiments>
+  <experiment name="ConvincingPower" repetitions="5" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go</go>
+    <timeLimit steps="500"/>
+    <exitCondition>emis_tick_cumulative = 0</exitCondition>
+    <metric>count population with [status = "denier"]</metric>
+    <metric>count population with [status = "neutral"]</metric>
+    <metric>count population with [status = "activist"]</metric>
+    <metric>emis_tick_cumulative</metric>
+    <enumeratedValueSet variable="initial-number-of-influencers">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="energy_dec">
+      <value value="10"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="Denier-Convincing-Power" first="0" step="0.2" last="1"/>
+    <enumeratedValueSet variable="initial-number-of-agents">
+      <value value="750"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="energy_inc">
+      <value value="10"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="Activitst-Convincing-Power" first="0" step="0.2" last="1"/>
+  </experiment>
+</experiments>
 @#$#@#$#@
 @#$#@#$#@
 default

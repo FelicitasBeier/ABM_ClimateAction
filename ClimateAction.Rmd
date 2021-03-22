@@ -1,0 +1,95 @@
+---
+title: "ClimateAction : How climate change communication can be the key to avoid tipping point damages"
+author: "Felicitas Beier, Abhijeet Mishra"
+date: "3/22/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## ClimateAction
+
+The Climate Action ABM is a simple agent-based model. It models the role of climate activists, climate deniers and the power of influencers in a society. CO2 emissions per capita depend on the agents state of mind (activists emit less compared to the general population or climate deniers). If a certain share of the population is climate-aware (activist state), carbon removal technologies are used. This is a social tipping point. 
+
+The global level of CO2 in the atmosphere starts at 410ppm. At a state of 1200ppm Earth System tipping points are reached and humanity ends. This stylized model is available at <https://github.com/FelicitasBeier/ABM_ClimateAction>.
+
+## Model basics
+
+There are two types of agents (people and influencers). People move around randomly. Influencer (VIPs), represented by the car symbol, also move randomly, but faster. They move several steps in one time step, while people, represented by the person symbol, move only 1 step. 
+
+The population (people) are divided into activists (blue), neutral (white) and deniers (red). Each agent is endowed with a certain level of activism energy. If activism energy is greater than 70, the person is declared activist, if it is below 30, the person is declared denier. All other are neutral individuals. 
+
+Initially, 20% of the population are deniers, 20% activists and 60% neutral individuals.
+
+Here, the names are only representative and can be elaborated/generalized as follows:
+
+* "activist" are agents with considerable knowledge about climate change, are empathetic, care about the environment, convince others to make better choices to avoid envronmental degradation.
+
+* "neutral" are agents with or without considerable knowledge about climate change. These agents are indifferent towards impacts of climate change. In real world, such elements in population probably exist in large numbers. These agents don't convince others to think any differently but are persuaded by others.
+
+* "deniers" are agents who don't believe in climate change, are not empathetic, do not care about the environment, and engage in actively denouncing the existence of climate change.
+
+* "influencer" are agent(s) which are similar to "activist" but these agents have a higher reach or engagement with normal population. These agent(s) help in moving public consensus about climate change by virtue of talking publically about perils of climate change and the damages it can do for future generations. Influencer(s) also make sure that misinformation about climate change is not propagated in their vicinity or influence circle.
+
+When an activists meets another person, the other person's activism energy increases. When a denier meets another person, the other person's activism energy decreases. Influencer increase the energy of people in their surrounding (3-pixel radius) by the same amount as activists and therefore support activists and hinder spreading of misinformation, consipiracy theories and climate scepticism. 
+
+Every agent (except for activists) emits 0.02ppm CO2 per time step. Activists don't emit CO2.
+When carbon removal technology comes into place (above social tipping point: support of 60% of population), 0.5ppm CO2 are removed from the atmosphere per time step.  
+
+## Getting started
+
+The setup button sets up the world (initialization of game according to selected settings).
+The go button starts the simulation run. The start button lets agents make one step.
+
+The user can set 
+
+(a) the initial number of agents in a range between 1 billion represented by 100 turtles (population at around 1900) and 10 billion represented by 1000 turtles (potential population by the end of the century).  
+
+(b) the initial number of influencers in a range between 0 and 5.
+
+(c) the activists (deniers) convincing power, i.e. the probability that the activists (denier) convinces the person they met (between 0 and 1)
+
+(d) the activists (deniers) level of activism they add (subtract) from the person they meet energy_inc (energy_dec)
+
+## Results
+
+In the standard setting (7.5 billion people (750), 10 mio. influencers (1), same convincing power for activists and deniers), it is possible to hit the Earth System Tipping Point before the Social Tipping Point allowing decarbonization (carbon removal) is reached. However, there is also a chance that humanity survives.There are strategies to decrease the likelihood of human extinction (population size, number of influencers, power of activists).
+
+Here we analyze the effect of different levels of convincing powers (of `deniers` and `activists`) on model behavior (i.e., total emissions). 
+
+### Scenario setup
+
+- 5 repetitions 
+
+- Max. number of steps allowed : 500
+
+- Terminal condition: If emissions reach tipping point (1200ppm) or 0 (0ppm)
+
+- Denier convincing power (prob. 0 to 1 at steps of 0.2)
+
+- Activist convincing power (prob. 0 to 1 at steps of 0.2)
+
+### Simualtion output
+
+![img](scen_combi.png)
+Fig. 1: Possible emission (ppm) trajectories based on different convincing powers of activists (columns) and deniers (rows). Dotted red line depicts 1200ppm tipping point. 5 different lines in each box represent 5 repetitions.
+
+#### Outcomes
+
+* With low activist convincing powers, tipping point barriers are always breached.
+
+* With low denier convincing powers, tipping point barriers are always avoided.
+
+* With moderate activist or denier convincing powers, tipping point barriers are breached when when activist power are lower than deniers (and vice-versa).
+
+* With equal convincing powers, both outcomes are possible i.e., breaching tipping point or net zero emissions (if steps are extended). 
+
+* With equal convincing powers, likelihood of staying within safe-operating-space of emissions (below tipping point) is slightly higher due to the role of influencer.
+
+## Credits and references
+
+Developed by :
+
+Felicitas Beier (beier@pik-potsdam.de) and Abhijeet Mishra (mishra@pik-potsdam.de)
